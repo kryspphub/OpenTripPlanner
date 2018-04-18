@@ -464,9 +464,8 @@ otp.widgets.tripoptions.ModeSelector =
     otp.Class(otp.widgets.tripoptions.TripOptionsWidgetControl, {
 
     id           :  null,
-
     modes        : otp.config.modes,
-
+    sortByOptions: otp.config.sortByOptions,
     optionLookup : null,
     modeControls : null,
 
@@ -478,8 +477,14 @@ otp.widgets.tripoptions.ModeSelector =
 
         //TRANSLATORS: Label for dropdown Travel by: [mode of transport]
         var html = "<div class='notDraggable'>" + _tr("Travel by") + ": ";
-        html += '<select id="'+this.id+'">';
+        html += '<select id="'+this.id+'" style="width:28%">';
         _.each(this.modes, function(text, key) {
+            html += '<option>'+text+'</option>';
+        });
+        html += '</select>&nbsp;';
+        html += _tr("Sort by") + ": ";
+        html += '<select id="'+this.id+'-sortBy" style="width:32%">';
+        _.each(this.sortByOptions, function(text, key) {
             html += '<option>'+text+'</option>';
         });
         html += '</select>';
@@ -487,6 +492,7 @@ otp.widgets.tripoptions.ModeSelector =
         html += "</div>";
 
         $(html).appendTo(this.$());
+
         //this.setContent(content);
     },
 
@@ -497,6 +503,13 @@ otp.widgets.tripoptions.ModeSelector =
                 mode : _.keys(this_.modes)[this.selectedIndex],
             });
             this_.refreshModeControls();
+        });
+        
+        $("#"+this.id+'-sortBy').change(function() {
+            this_.tripWidget.inputChanged({
+            	sortByOption : _.keys(this_.sortByOptions)[this.selectedIndex],
+            });
+            this_.refreshSortByOptions();
         });
     },
 
@@ -510,6 +523,14 @@ otp.widgets.tripoptions.ModeSelector =
             i++;
         }
 
+        i = 0;
+        for(sortByOption in this.sortByOptions) {
+            if(sortByOption === data.queryParams.sortByOption) {
+                this.tripWidget.module.sortByOption = data.queryParams.sortByOption;
+                $('#'+this.id+'-sortBy option:eq('+i+')').prop('selected', true);
+            }
+            i++;
+        }
         for(i = 0; i < this.modeControls.length; i++) {
             this.modeControls[i].restorePlan(data);
         }
@@ -531,12 +552,15 @@ otp.widgets.tripoptions.ModeSelector =
         }
     },
 
+    refreshSortByOptions : function() {
+        //var sortByOption = _.keys(this.sortByOptions)[document.getElementById(this.id+'-sortBy').selectedIndex];
+    },
+    
     addModeControl : function(widget) {
         this.modeControls.push(widget);
     }
 
 });
-
 
 //** MaxWalkSelector **//
 

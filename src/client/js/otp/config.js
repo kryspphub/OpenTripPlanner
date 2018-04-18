@@ -336,3 +336,10 @@ otp.config.modes = {
     //Options widgets)
     //    'TRANSIT,WALK,BICYCLE_RENT': _tr('Transit & Rented Bicycle')
     };
+
+otp.config.sortByOptions = {
+	    //TRANSLATORS: Sort by
+	        "DEFAULT"        : _tr("Please Select"), 
+	        "DISTANCE"        : _tr("Shortest Distance"),
+	        "TIME"        : _tr("Shortest Time")
+};
